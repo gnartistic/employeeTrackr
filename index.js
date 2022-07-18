@@ -44,7 +44,7 @@ function init() {
 }
 
 function main() {
-    console.log('/n/n')
+    console.log('\n\n')
     inquirer.prompt([
         {
             type: 'list',
@@ -86,7 +86,7 @@ function departments() {
                 queries.selectedDepartment();
                 main();
                 break;
-            case QChoices.departments[1];
+            case QChoices.departments[1]:
                 addDepartment();
                 break;
             default:
@@ -94,3 +94,16 @@ function departments() {
         }
     });
 }
+
+function addDepartment() {
+    inquirer.prompt({
+        type: 'input',
+        message: Questions.departments[1],
+        name: 'choice',
+    }).then((value) => {
+        queries.insertIntoDepartments(value.choice);
+        main();
+    });
+}
+
+init();

@@ -1,7 +1,4 @@
 USE company;
 
-SELECT FROM * company.department;
+INSERT INTO departments (department_name) VALUES ('Quality Control');
 
-SELECT FROM * company.role;
-
-SELECT FROM * company.employee;
