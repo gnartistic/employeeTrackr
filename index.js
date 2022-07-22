@@ -35,6 +35,7 @@ const QChoices = {
         'View employees by manager ID',
         'Add an employee',
         'Update an employee role',
+        'Update which manager an employee is assigned to'
     ]
 }
 
@@ -175,7 +176,10 @@ function employees() {
                 addEmployee();
                 break;
             case QChoices.employees[3]:
-                employeeUpdated();
+                employeeUpdateRole();
+                break;
+            case QChoices.employees[4]:
+                employeeUpdateManager();
                 break;
             default:
                 console.log('error in the switch case in employee function in index.js file', value.name);
@@ -226,7 +230,7 @@ function addEmployee() {
 }
 
 //update employee
-function employeeUpdated() {
+function employeeUpdateRole() {
     inquirer.prompt([
         {
             type: 'input',
@@ -239,9 +243,28 @@ function employeeUpdated() {
             name: 'role'
         },
     ]).then((value) => {
-        queries.updateEmployees(value.employee_id, value.role);
+        queries.updateEmployeeRole(value.employee_id, value.role);
+        queries.selectedEmployees();
         main();
     });
+}
 
+function employeeUpdateManager() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'Enter the ID of the employee you want to reassign to a new manager',
+            name:'employee_id'
+        },
+        {
+            type: 'input',
+            message: 'Enter the ID of the new manager you want to assign to this employee',
+            name:'manager'
+        }
+    ]).then((value) => {
+        queries.updateEmployeeManager(value.employee_id, value.manager);
+        queries.selectedEmployees();
+        main();
+    })
 }
 init();
