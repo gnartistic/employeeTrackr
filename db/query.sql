@@ -20,3 +20,7 @@ FROM roles
 INNER JOIN employees ON roles.id = employees.role_id
 LEFT JOIN departments on roles.department_id = departments.id
 LEFT JOIN employees managers ON employees.manager_id = managers.id;
+
+SELECT employees.id AS employees_id, employees.first_name,
+employees.last_name FROM employees
+WHERE manager_id = 4;

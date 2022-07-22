@@ -32,6 +32,7 @@ const QChoices = {
     ],
     employees: [
         'View all employees',
+        'View employees by manager ID',
         'Add an employee',
         'Update an employee role',
     ]
@@ -134,7 +135,7 @@ function addRole() {
     inquirer.prompt([
         {
             type: 'input',
-            message: 'Enter the title of the role',
+            message: 'Enter the title of the new role',
             name: 'title',
         },
         {
@@ -144,7 +145,7 @@ function addRole() {
         },
         {
             type: 'input',
-            message: 'Enter the department ID this role belongs to',
+            message: 'Enter the ID of the department this role belongs to',
             name: 'department_id',
         }
     ]).then((value) => {
@@ -168,9 +169,12 @@ function employees() {
                 main();
                 break;
             case QChoices.employees[1]:
-                addEmployee();
+                employeesByManager();
                 break;
             case QChoices.employees[2]:
+                addEmployee();
+                break;
+            case QChoices.employees[3]:
                 employeeUpdated();
                 break;
             default:
@@ -179,31 +183,44 @@ function employees() {
     });
 }
 
+function employeesByManager() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'Enter the ID of a manager to veiw the employees that work under them.',
+            name:'manager_id'
+        }
+    ]).then((value) => {
+        queries.viewEmployeesByManager(value.manager_id);
+        main();
+    })
+}
+
 // add an employee
 function addEmployee() {
     inquirer.prompt([
         {
             type: 'input',
-            message: 'Enter the title of the employee',
-            name: 'title',
+            message: 'Enter the first name of this employee',
+            name: 'first_name',
         },
         {
             type: 'input',
-            message: 'Enter the yearly salary of this employee',
-            name: 'salary',
+            message: 'Enter the last name of this employee',
+            name: 'last_name',
         },
         {
             type: 'input',
-            message: 'Enter the department ID this employee belong to',
-            name: 'department_id',
+            message: 'Enter the ID of the role you want to assign to this employee',
+            name: 'role_id',
         },
         {
             type: 'input',
-            message: 'Enter the ID of the manager they work under',
+            message: 'Enter the ID of the manager that the employee works under',
             name: 'manager_id'
         }
     ]).then((value) => {
-        queries.insertIntoEmployees(value.title, value.salary, value.department_id, value.manager_id);
+        queries.insertIntoEmployees(value.first_name, value.last_name, value.role_id, value.manager_id);
         main();
     });
 }
@@ -218,7 +235,7 @@ function employeeUpdated() {
         },
         {
             type: 'input',
-            message: 'Enter their new role',
+            message: 'Enter the ID of the new role you want to assign to this employee',
             name: 'role'
         },
     ]).then((value) => {
