@@ -35,8 +35,8 @@ VALUES
 ('Elizabeth', 'Collins', 7, 4),
 
 ('Johnny', 'Jenkins', 8, null),
-('Bonnie', 'Phillips', 9, 7),
-('Judith', 'Parker', 10, 7),
+('Bonnie', 'Phillips', 9, 8),
+('Judith', 'Parker', 10, 8),
 ('Linda', 'Green', 11, null),
-('Justin', 'Evans', 12, 10);
+('Justin', 'Evans', 12, 11);
 
