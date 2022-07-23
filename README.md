@@ -4,7 +4,7 @@
   deployment:  
   ## Description
   
-  This is a node.js application that utilizes multiple npm packages (mysql2, dotenv, express, console.table, inquirer, and save), mySQL, and JavaScript to capture and track data for company database. The kind of data that can be viewed, altered, and added includes employee names, ids, roles, departments, and budgets. Some of the key features include the ability to delete employees, roles, and departments, as well as the ability to update employee managers, view all employees in a department, and based on their manager.
+  This is a node.js application that utilizes multiple npm packages (mysql2, dotenv, express, console.table, inquirer, and save), mySQL, and JavaScript to capture and track data for a mock company database. The kind of data that can be viewed, altered, and added includes employee names, ids, roles, departments, and budgets. Some of the key features include the ability to delete employees, roles, and departments, update employee managers, and the ability to view all employees based on their department and or their manager.
   
   ## Table of Contents
   
