@@ -1,5 +1,9 @@
 const inquirer = require('inquirer');
-const queries = require('./lib/queries.js');
+const db = require('./config/connection');
+const depQueries = require('./lib/departmentQueries');
+const empQueries = require('./lib/employeeQueries');
+const rolQueries = require('./lib/roleQueries');
+const results = require('./lib/results');
 
 const Questions = {
     main: 'Which table would you like to interact with?',
@@ -44,32 +48,34 @@ function init() {
 }
 
 function main() {
-    console.log('\n\n')
-    inquirer.prompt([
-        {
-            type: 'list',
-            message: Questions.main,
-            name: 'choice',
-            choices: QChoices.main
-        }
-    ]).then((value) => {
-        switch (value.choice) {
-            case QChoices.main[0]:
-                departments();
-                break;
-            case QChoices.main[1]:
-                roles();
-                break;
-            case QChoices.main[2]:
-                employees();
-                break;
-            case QChoices.main[3]:
-                process.abort();
-                break;
-            default:
-                console.log("error in switch case in main function in index.js file", value.name);
-        }
-    });
+    setTimeout(function () {
+        console.log('\n\n')
+        inquirer.prompt([
+            {
+                type: 'list',
+                message: Questions.main,
+                name: 'choice',
+                choices: QChoices.main
+            }
+        ]).then((value) => {
+            switch (value.choice) {
+                case QChoices.main[0]:
+                    departments();
+                    break;
+                case QChoices.main[1]:
+                    roles();
+                    break;
+                case QChoices.main[2]:
+                    employees();
+                    break;
+                case QChoices.main[3]:
+                    process.abort();
+                    break;
+                default:
+                    console.log("error in switch case in main function in index.js file", value.name);
+            }
+        })
+    }, 1000);
 }
 
 function departments() {
@@ -83,7 +89,7 @@ function departments() {
     ]).then((value) => {
         switch (value.choice) {
             case QChoices.departments[0]:
-                queries.selectedDepartment();
+                depQueries.selectedDepartment();
                 main();
                 break;
             case QChoices.departments[1]:
@@ -101,7 +107,7 @@ function addDepartment() {
         message: Questions.departments[1],
         name: 'choice',
     }).then((value) => {
-        queries.insertIntoDepartments(value.choice);
+        depQueries.insertIntoDepartments(value.choice);
         main();
     });
 }
@@ -117,7 +123,7 @@ function roles() {
     ]).then((value) => {
         switch (value.choice) {
             case QChoices.roles[0]:
-                queries.selectedRoles();
+                rolQueries.selectedRoles();
                 main();
                 break;
             case QChoices.roles[1]:
@@ -150,7 +156,7 @@ function addRole() {
             name: 'department_id',
         }
     ]).then((value) => {
-        queries.insertIntoRoles(value.title, value.salary, value.department_id);
+        rolQueries.insertIntoRoles(value.title, value.salary, value.department_id);
         main();
     });
 }
@@ -166,8 +172,10 @@ function employees() {
     ]).then((value) => {
         switch (value.choice) {
             case QChoices.employees[0]:
-                queries.selectedEmployees();
-                main();
+                empQueries.selectedEmployees();
+                setTimeout(function () {
+                    main();
+                }, 1000);
                 break;
             case QChoices.employees[1]:
                 employeesByManager();
@@ -192,12 +200,12 @@ function employeesByManager() {
         {
             type: 'input',
             message: 'Enter the ID of a manager to veiw the employees that work under them.',
-            name:'manager_id'
+            name: 'manager_id'
         }
     ]).then((value) => {
-        queries.viewEmployeesByManager(value.manager_id);
+        empQueries.viewEmployeesByManager(value.manager_id);
         main();
-    })
+    });
 }
 
 // add an employee
@@ -224,7 +232,7 @@ function addEmployee() {
             name: 'manager_id'
         }
     ]).then((value) => {
-        queries.insertIntoEmployees(value.first_name, value.last_name, value.role_id, value.manager_id);
+        empQueries.insertIntoEmployees(value.first_name, value.last_name, value.role_id, value.manager_id);
         main();
     });
 }
@@ -243,8 +251,8 @@ function employeeUpdateRole() {
             name: 'role'
         },
     ]).then((value) => {
-        queries.updateEmployeeRole(value.employee_id, value.role);
-        queries.selectedEmployees();
+        empQueries.updateEmployeeRole(value.employee_id, value.role);
+        results.showChangesRole(value.employee_id);
         main();
     });
 }
@@ -254,17 +262,17 @@ function employeeUpdateManager() {
         {
             type: 'input',
             message: 'Enter the ID of the employee you want to reassign to a new manager',
-            name:'employee_id'
+            name: 'employee_id'
         },
         {
             type: 'input',
             message: 'Enter the ID of the new manager you want to assign to this employee',
-            name:'manager'
+            name: 'manager'
         }
     ]).then((value) => {
-        queries.updateEmployeeManager(value.employee_id, value.manager);
-        queries.selectedEmployees();
+        empQueries.updateEmployeeManager(value.employee_id, value.manager);
+        results.showChangesManager(value.employee_id);
         main();
-    })
+    });
 }
 init();
