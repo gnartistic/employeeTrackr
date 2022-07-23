@@ -4,6 +4,7 @@ const depQueries = require('./lib/departmentQueries');
 const empQueries = require('./lib/employeeQueries');
 const rolQueries = require('./lib/roleQueries');
 const results = require('./lib/results');
+const deleteQueries = require('./lib/delete');
 
 const Questions = {
     main: 'Which table would you like to interact with?',
@@ -28,18 +29,23 @@ const QChoices = {
     ],
     departments: [
         'View all departments',
+        'View all employees by department',
+        'View department budgets',
         'Add a new department',
+        'Delete a department'
     ],
     roles: [
         'View all roles',
-        'Add a role'
+        'Add a role',
+        'Delete a role',
     ],
     employees: [
         'View all employees',
-        'View employees by manager ID',
+        'View all employees by manager',
         'Add an employee',
+        'Delete an employee',
         'Update an employee role',
-        'Update which manager an employee is assigned to'
+        'Update employee assigned manager'
     ]
 }
 
@@ -93,12 +99,47 @@ function departments() {
                 main();
                 break;
             case QChoices.departments[1]:
+                employeesByDepartment();
+                break;
+            case QChoices.departments[2]:
+                departmentBudget();
+                break;
+            case QChoices.departments[3]:
                 addDepartment();
+                break;
+            case QChoices.departments[4]:
+                deleteaDepartment();
                 break;
             default:
                 console.log('Error in switch case in departments function in index.js file', value.name);
         }
     });
+}
+
+function employeesByDepartment() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'Enter the ID of a department to veiw employees',
+            name: 'department_id'
+        }
+    ]).then((value) => {
+        depQueries.viewEmployeesByDepartment(value.department_id);
+        main();
+    });
+}
+
+function departmentBudget() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'Enter ID of deparment to view budget',
+            name:'department_id',
+        },
+    ]).then((value) => {
+        depQueries.departmentBudgetCalc(value.department_id);
+        main();
+    })
 }
 
 function addDepartment() {
@@ -108,6 +149,17 @@ function addDepartment() {
         name: 'choice',
     }).then((value) => {
         depQueries.insertIntoDepartments(value.choice);
+        main();
+    });
+}
+
+function deleteaDepartment() {
+    inquirer.prompt({
+        type: 'input',
+        message: 'Enter the id of a department to delete',
+        name: 'department_delete'
+    }).then((value) => {
+        deleteQueries.deleteDepartment(value.department_delete);
         main();
     });
 }
@@ -130,7 +182,7 @@ function roles() {
                 addRole();
                 break;
             case QChoices.roles[2]:
-                updateRole();
+                deleteaRole();
                 break;
             default:
                 console.log('error in switch case in roles function in index.js file', value.name);
@@ -142,23 +194,36 @@ function addRole() {
     inquirer.prompt([
         {
             type: 'input',
-            message: 'Enter the title of the new role',
+            message: 'Enter the title of new role',
             name: 'title',
         },
         {
             type: 'input',
-            message: 'Enter the yearly salary for this role',
+            message: 'Enter the yearly salary of new role',
             name: 'salary',
         },
         {
             type: 'input',
-            message: 'Enter the ID of the department this role belongs to',
+            message: 'Enter the ID of the department the new role belongs to',
             name: 'department_id',
         }
     ]).then((value) => {
         rolQueries.insertIntoRoles(value.title, value.salary, value.department_id);
         main();
     });
+}
+
+function deleteaRole() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'Enter the ID of a role to delete',
+            name:'role_delete',
+        },
+    ]).then((value) => {
+        deleteQueries.deleteRole(value.role_delete);
+        main();
+    })
 }
 
 function employees() {
@@ -173,9 +238,7 @@ function employees() {
         switch (value.choice) {
             case QChoices.employees[0]:
                 empQueries.selectedEmployees();
-                setTimeout(function () {
-                    main();
-                }, 1000);
+                main();
                 break;
             case QChoices.employees[1]:
                 employeesByManager();
@@ -184,9 +247,12 @@ function employees() {
                 addEmployee();
                 break;
             case QChoices.employees[3]:
-                employeeUpdateRole();
+                deleteaEmployee();
                 break;
             case QChoices.employees[4]:
+                employeeUpdateRole();
+                break;
+            case QChoices.employees[5]:
                 employeeUpdateManager();
                 break;
             default:
@@ -199,7 +265,7 @@ function employeesByManager() {
     inquirer.prompt([
         {
             type: 'input',
-            message: 'Enter the ID of a manager to veiw the employees that work under them.',
+            message: 'Enter the ID of a manager to veiw their employees',
             name: 'manager_id'
         }
     ]).then((value) => {
@@ -213,22 +279,22 @@ function addEmployee() {
     inquirer.prompt([
         {
             type: 'input',
-            message: 'Enter the first name of this employee',
+            message: 'Enter the first name of new employee',
             name: 'first_name',
         },
         {
             type: 'input',
-            message: 'Enter the last name of this employee',
+            message: 'Enter the last name of new employee',
             name: 'last_name',
         },
         {
             type: 'input',
-            message: 'Enter the ID of the role you want to assign to this employee',
+            message: 'Enter the ID of a role to assign to new employee',
             name: 'role_id',
         },
         {
             type: 'input',
-            message: 'Enter the ID of the manager that the employee works under',
+            message: 'Enter the ID of a manager to assign to new employee',
             name: 'manager_id'
         }
     ]).then((value) => {
@@ -237,17 +303,29 @@ function addEmployee() {
     });
 }
 
+function deleteaEmployee() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            message: 'Enter the ID of an employee to delete',
+            name: 'employee_delete'
+        }
+    ]).then((value) => {
+        deleteQueries.deleteEmployee(value.employee_delete);
+        main();
+    });
+}
 //update employee
 function employeeUpdateRole() {
     inquirer.prompt([
         {
             type: 'input',
-            message: 'Enter the ID of the employee you want to update',
+            message: 'Enter the ID of a employee to update',
             name: 'employee_id'
         },
         {
             type: 'input',
-            message: 'Enter the ID of the new role you want to assign to this employee',
+            message: 'Enter the ID of a new role to assign to employee',
             name: 'role'
         },
     ]).then((value) => {
@@ -261,12 +339,12 @@ function employeeUpdateManager() {
     inquirer.prompt([
         {
             type: 'input',
-            message: 'Enter the ID of the employee you want to reassign to a new manager',
+            message: 'Enter the ID of employee to reassign manager',
             name: 'employee_id'
         },
         {
             type: 'input',
-            message: 'Enter the ID of the new manager you want to assign to this employee',
+            message: 'Enter the ID of a new manager to assign to employee',
             name: 'manager'
         }
     ]).then((value) => {

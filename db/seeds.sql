@@ -23,20 +23,20 @@ VALUES
 ('Accounting Manager', '84788.00', 4),
 ('Accountant', '46898.00', 4);
 
-INSERT INTO employees (first_name, last_name, role_id, manager_id)
+INSERT INTO employees (first_name, last_name, role_id, manager_id, department_id)
 VALUES
-('Ronald', 'Young', 1, null),
-('Christine', 'Thompson', 2, 1),
-('Jean', 'Wright', 3, 1),
+('Ronald', 'Young', 1, null, 1),
+('Christine', 'Thompson', 2, 1, 1),
+('Jean', 'Wright', 3, 1, 1),
 
-('Julia', 'Bell', 4, null),
-('Joseph', 'Peterson', 5, 4),
-('Aaron', 'Rivera', 6, 4),
-('Elizabeth', 'Collins', 7, 4),
+('Julia', 'Bell', 4, null, 2),
+('Joseph', 'Peterson', 5, 4, 2),
+('Aaron', 'Rivera', 6, 4, 2),
+('Elizabeth', 'Collins', 7, 4, 2),
 
-('Johnny', 'Jenkins', 8, null),
-('Bonnie', 'Phillips', 9, 8),
-('Judith', 'Parker', 10, 8),
-('Linda', 'Green', 11, null),
-('Justin', 'Evans', 12, 11);
+('Johnny', 'Jenkins', 8, null, 3),
+('Bonnie', 'Phillips', 9, 8, 3),
+('Judith', 'Parker', 10, 8, 3),
+('Linda', 'Green', 11, null, 4),
+('Justin', 'Evans', 12, 11, 4);
 
