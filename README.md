@@ -1,7 +1,7 @@
 # employeeTrackr
   [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
   
-  deployment:  
+  deployment:  [![video](/assets/images/My%20project-1.png)](https://vimeo.com/manage/videos/732737408/)
   ## Description
   
   This is a node.js application that utilizes multiple npm packages (mysql2, dotenv, express, console.table, inquirer, and save), mySQL, and JavaScript to capture and track data for a mock company database. The kind of data that can be viewed, altered, and added includes employee names, ids, roles, departments, and budgets. Some of the key features include the ability to delete employees, roles, and departments, update employee managers, and the ability to view all employees based on their department and or their manager.
